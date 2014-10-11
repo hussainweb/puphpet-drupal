@@ -65,6 +65,7 @@ server:
         - php5-memcache
         - vim
         - curl
+        - zsh
 firewall:
     install: '1'
     rules:

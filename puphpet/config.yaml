@@ -186,7 +186,7 @@ xhprof:
     install: '1'
 drush:
     install: '1'
-    version: 7.0.0-alpha3
+    version: 7.0.0-alpha5
 ruby:
     install: '1'
     versions:

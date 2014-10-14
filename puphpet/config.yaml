@@ -135,6 +135,7 @@ php:
     composer_home: ''
     modules:
         php:
+            - apcu
             - cli
             - curl
             - fpm
@@ -147,6 +148,7 @@ php:
             - mysql
             - mysqlnd
             - sqlite
+            - sybase
         pear:
             - PHP_CodeSniffer
         pecl:

@@ -40,7 +40,7 @@ bold=$(tput -Txterm bold)
 reset=$(tput -Txterm sgr0)
 
 # Nicely formatted terminal prompt
-export PS1='\n\[$bold\]\[$black\][\[$dk_blue\]\@\[$black\]]-[\[$green\]\u\[$yellow\]@\[$green\]\h\[$black\]]-[\[$pink\]\w\[$black\]]\[\033[0;33m\]$(__vcs_name) \[\033[00m\]\[$reset\]\n\[$reset\]\$ '
+export PS1='\[$green\]\u\[$yellow\]@\[$green\]\h\[$reset\]:\[$pink\]\w\[$black\]\[\033[0;33m\]$(__vcs_name) \[\033[00m\]\[$reset\]\$ '
 
 alias ls='ls -F --color=always'
 alias dir='dir -F --color=always'
@@ -49,4 +49,18 @@ alias cp='cp -iv'
 alias rm='rm -i'
 alias mv='mv -iv'
 alias grep='grep --color=auto -in'
+
 alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias .......='cd ../../../../../..'
+
+alias gs.='git status .'
+alias gd.='git diff .'
+alias ga.='git add .'
+alias gfo='git fetch origin'
+
+alias cw='cd /var/www'
+alias cdwww='cd /var/www'

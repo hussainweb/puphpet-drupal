@@ -48,7 +48,7 @@ vagrantfile-local:
         host: null
         port: null
         private_key_path: null
-        username: vagrant
+        username: hw
         guest_port: null
         keep_alive: true
         forward_agent: false

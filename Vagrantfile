@@ -214,7 +214,7 @@ Vagrant.configure('2') do |config|
   end
   config.vm.provision :shell, :path => 'puphpet/shell/important-notices.sh'
 
-  if File.file?("#{dir}/puphpet/files/dot/ssh/id_rsa")
+  if File.file?("#{dir}/puphpet/files/dot/ssh/id_rsa") || File.file?("#{dir}/puphpet/files/dot/ssh/insecure_private_key")
     config.ssh.private_key_path = [
       "#{dir}/puphpet/files/dot/ssh/id_rsa",
       "#{dir}/puphpet/files/dot/ssh/insecure_private_key"

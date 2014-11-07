@@ -158,16 +158,16 @@ php:
         display_startup_errors: On
         error_reporting: '-1'
         session.save_path: /var/lib/php/session
-        max_execution_time: 300
+        max_execution_time: '300'
         mbstring.http_input: pass
         mbstring.http_output: pass
         mbstring.encoding_translation: '0'
         memory_limit: 384M
-        opcache.fast_shutdown: 1
-        opcache.interned_strings_buffer: 8
-        opcache.max_accelerated_files: 4000
-        opcache.memory_consumption: 128
-        opcache.revalidate_freq: 60
+        opcache.fast_shutdown: '1'
+        opcache.interned_strings_buffer: '8'
+        opcache.max_accelerated_files: '4000'
+        opcache.memory_consumption: '128'
+        opcache.revalidate_freq: '60'
     timezone: Asia/Kolkata
     mod_php: 0
 hhvm:
@@ -213,6 +213,7 @@ python:
             version: ''
 mysql:
     install: '1'
+    override_options: {  }
     root_password: vagrant
     adminer: '1'
     databases:
@@ -235,6 +236,7 @@ postgresql:
     adminer: 0
 mariadb:
     install: '0'
+    override_options: {  }
     root_password: '123'
     adminer: 0
     databases: {  }

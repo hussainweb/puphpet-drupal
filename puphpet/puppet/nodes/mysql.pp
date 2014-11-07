@@ -43,10 +43,16 @@ if hash_key_equals($mysql_values, 'install', 1) {
   }
 
   if $mysql_values['root_password'] {
+    $mysql_override_options = empty($mysql_values['override_options']) ? {
+      true    => {},
+      default => $mysql_values['override_options']
+    }
+
     class { 'mysql::server':
-      package_name  => $mysql_server_server_package_name,
-      root_password => $mysql_values['root_password'],
-      require       => $mysql_server_require
+      package_name     => $mysql_server_server_package_name,
+      root_password    => $mysql_values['root_password'],
+      require          => $mysql_server_require,
+      override_options => $mysql_override_options
     }
 
     class { 'mysql::client':
@@ -61,7 +67,7 @@ if hash_key_equals($mysql_values, 'install', 1) {
         }), 'name')
 
         create_resources( puphpet::mysql::db, {
-          "${database['user']}@${database['name']}" => $database_merged
+          "${key}" => $database_merged
         })
       }
     }

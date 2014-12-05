@@ -88,4 +88,3 @@ define mongodb_db (
     }
   }
 }
-

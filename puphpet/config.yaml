@@ -29,7 +29,9 @@ vagrantfile-local:
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
                     - '--parser future'
         synced_folder:
-            vnvVdbfkJEV7:
+            varwww:
+                owner: ''
+                group: ''
                 source: ./
                 target: /var/www
                 sync_type: default
@@ -69,8 +71,13 @@ server:
 firewall:
     install: '1'
     rules:
-        nrMf15WShe2M:
+        mysqlport:
             port: '3306'
+            priority: '100'
+            proto: tcp
+            action: accept
+        seleniumport:
+            port: '4444'
             priority: '100'
             proto: tcp
             action: accept
@@ -86,7 +93,7 @@ apache:
     modules:
         - rewrite
     vhosts:
-        MhBWygqkEKEr:
+        drupaldev:
             servername: drupal.dev
             docroot: /var/www/drupal/docroot
             port: '80'
@@ -111,8 +118,10 @@ nginx:
         default_vhost: 1
         proxy_buffer_size: 128k
         proxy_buffers: '4 256k'
+    upstreams: {  }
     vhosts:
-        WQGH5Vvx5B63:
+        IWmjxjm1NfXC:
+            proxy: ''
             server_name: awesome.dev
             server_aliases:
                 - www.awesome.dev
@@ -126,6 +135,7 @@ nginx:
             envvars:
                 - 'APP_ENV dev'
             engine: php
+            client_max_body_size: 1m
             ssl_cert: ''
             ssl_key: ''
 php:
@@ -193,6 +203,9 @@ xdebug:
         xdebug.remote_port: '9000'
 xhprof:
     install: '1'
+wpcli:
+    install: '0'
+    version: ''
 drush:
     install: '1'
     version: 7.0.0-alpha5
@@ -204,12 +217,15 @@ ruby:
             bundler: '1'
 nodejs:
     install: '1'
-    npm_packages: {  }
+    npm_packages:
+        - grunt
+        - bower
+        - gulp
 python:
     install: '1'
     packages: {  }
     versions:
-        ZBSx5RGt4Z0a:
+        adtG0eUBmhfs:
             version: ''
 mysql:
     install: '1'
@@ -217,7 +233,7 @@ mysql:
     root_password: vagrant
     adminer: '1'
     databases:
-        em07HeK00CSr:
+        drupaldb:
             grant:
                 - ALL
             name: drupal
@@ -283,6 +299,11 @@ rabbitmq:
 elastic_search:
     install: '0'
     settings:
+        version: ''
         java_install: true
-        autoupgrade: true
+solr:
+    install: '1'
+    settings:
+        version: 4.10.2
+        port: ''
 

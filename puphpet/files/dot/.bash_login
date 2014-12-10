@@ -1,5 +1,0 @@
-# Load .bashrc even if it is the first invocation.
-# Sourced from http://stackoverflow.com/a/18393620/124844.
-if [ -f ~/.bashrc ]; then
-    . ~/.bashrc
-fi

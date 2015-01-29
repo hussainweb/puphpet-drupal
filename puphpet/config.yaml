@@ -68,16 +68,25 @@ server:
         - vim
         - curl
         - zsh
+users_groups:
+    install: '1'
+    groups: {  }
+    users: {  }
+cron:
+    install: '1'
+    jobs: {  }
 firewall:
     install: '1'
     rules:
         mysqlport:
-            port: '3306'
+            port:
+                - '3306'
             priority: '100'
             proto: tcp
             action: accept
         seleniumport:
-            port: '4444'
+            port:
+                - '4444'
             priority: '100'
             proto: tcp
             action: accept
@@ -99,12 +108,20 @@ apache:
             port: '80'
             setenv:
                 - 'APP_ENV dev'
-            override:
-                - All
-            options:
-                - Indexes
-                - FollowSymLinks
-                - MultiViews
+            directories:
+                docroot:
+                    provider: directory
+                    path: /var/www/drupal/docroot
+                    options:
+                        - Indexes
+                        - FollowSymlinks
+                        - MultiViews
+                    allow_override:
+                        - All
+                    require:
+                        - all
+                        - granted
+                    custom_fragment: ''
             engine: php
             custom_fragment: ''
             ssl_cert: ''
@@ -208,7 +225,7 @@ wpcli:
     version: ''
 drush:
     install: '1'
-    version: 7.0.0-alpha7
+    version: 7.0.0-alpha8
 ruby:
     install: '1'
     versions:

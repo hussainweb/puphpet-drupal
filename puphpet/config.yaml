@@ -101,6 +101,9 @@ apache:
         sendfile: 0
     modules:
         - rewrite
+        - pagespeed
+        - info
+        - expires
     vhosts:
         drupaldev:
             servername: drupal.dev
@@ -108,6 +111,7 @@ apache:
             port: '80'
             setenv:
                 - 'APP_ENV dev'
+            custom_fragment: ''
             directories:
                 docroot:
                     provider: directory
@@ -122,13 +126,10 @@ apache:
                         - all
                         - granted
                     custom_fragment: ''
-            engine: php
-            custom_fragment: ''
             ssl_cert: ''
             ssl_key: ''
             ssl_chain: ''
             ssl_certs_dir: ''
-    mod_pagespeed: '1'
 nginx:
     install: '0'
     settings:
@@ -144,20 +145,20 @@ nginx:
                 - www.awesome.dev
             www_root: /var/www/awesome
             listen_port: '80'
-            location: \.php$
             index_files:
                 - index.html
                 - index.htm
                 - index.php
-            envvars:
-                - 'APP_ENV dev'
-            engine: php
             client_max_body_size: 1m
             ssl_cert: ''
             ssl_key: ''
+            ssl_port: ''
 php:
     install: '1'
-    version: '56'
+    settings:
+        version: '56'
+    fpm_settings:
+        port: 9000
     composer: '1'
     composer_home: ''
     modules:
@@ -181,6 +182,7 @@ php:
         pecl:
             - pecl_http
     ini:
+        date.timezone: 'Asia/Kolkata'
         display_errors: On
         display_startup_errors: On
         error_reporting: '-1'
@@ -195,8 +197,6 @@ php:
         opcache.max_accelerated_files: '4000'
         opcache.memory_consumption: '128'
         opcache.revalidate_freq: '60'
-    timezone: Asia/Kolkata
-    mod_php: 0
 hhvm:
     install: '0'
     nightly: 0
@@ -246,34 +246,29 @@ python:
             version: ''
 mysql:
     install: '1'
-    override_options: {  }
-    root_password: vagrant
+    settings:
+        version: '5.6'
+        root_password: 'vagrant'
+        override_options: {  }
     adminer: '1'
+    users: {  }
     databases:
         drupaldb:
-            grant:
-                - ALL
             name: drupal
-            host: localhost
-            user: drupal
-            password: vagrant
-            sql_file: ''
+            sql: ''
+    grants: {  }
 postgresql:
     install: '0'
     settings:
-        root_password: '123'
-        user_group: postgres
-        encoding: UTF8
-        version: '9.3'
+        global:
+            encoding: UTF8
+            version: '9.3'
+        server:
+            postgres_password: ''
     databases: {  }
+    users: {  }
+    grants: {  }
     adminer: 0
-mariadb:
-    install: '0'
-    override_options: {  }
-    root_password: '123'
-    adminer: 0
-    databases: {  }
-    version: '10.0'
 sqlite:
     install: '1'
     adminer: 0
@@ -282,10 +277,11 @@ mongodb:
     install: '0'
     settings:
         auth: 1
+        bind_ip: 127.0.0.1
         port: '27017'
     databases: {  }
 redis:
-    install: '0'
+    install: '1'
     settings:
         conf_port: '6379'
 mailcatcher:
@@ -313,10 +309,13 @@ rabbitmq:
     install: '0'
     settings:
         port: '5672'
+    users: {  }
+    vhosts: {  }
+    plugins: {  }
 elastic_search:
     install: '0'
     settings:
-        version: ''
+        version: null
         java_install: true
 solr:
     install: '1'

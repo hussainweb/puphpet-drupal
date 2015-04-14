@@ -64,3 +64,5 @@ alias gfo='git fetch origin'
 
 alias cw='cd /var/www'
 alias cdwww='cd /var/www'
+
+source /usr/local/rvm/scripts/rvm

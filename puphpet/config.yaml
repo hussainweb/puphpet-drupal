@@ -123,8 +123,7 @@ apache:
                     allow_override:
                         - All
                     require:
-                        - all
-                        - granted
+                        - all granted
                     custom_fragment: ''
             ssl_cert: ''
             ssl_key: ''
@@ -321,5 +320,5 @@ solr:
     install: '1'
     settings:
         version: 4.10.2
-        port: ''
+        port: '8984'
 

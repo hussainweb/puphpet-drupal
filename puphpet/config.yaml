@@ -100,6 +100,7 @@ apache:
         manage_group: false
         sendfile: 0
     modules:
+        - proxy_fcgi
         - rewrite
         - pagespeed
         - info
@@ -123,8 +124,14 @@ apache:
                     allow_override:
                         - All
                     require:
-                        - all granted
+                        - 'all granted'
                     custom_fragment: ''
+                    files_match:
+                        phpmatch:
+                            provider: filesmatch
+                            path: \.php$
+                            sethandler: 'proxy:fcgi://127.0.0.1:9000'
+                            custom_fragment: ''
             ssl_cert: ''
             ssl_key: ''
             ssl_chain: ''
@@ -149,9 +156,32 @@ nginx:
                 - index.htm
                 - index.php
             client_max_body_size: 1m
+            locations:
+                zdlmomnne2ni:
+                    location: /
+                    try_files:
+                        - $uri
+                        - $uri/
+                        - index.php
+                    fastcgi: ''
+                    fastcgi_index: ''
+                    fastcgi_split_path: ''
+                5vul8hyjsa0m:
+                    location: '~ \.php$'
+                    try_files:
+                        - $uri
+                        - $uri/
+                        - index.php
+                        - /index.php$is_args$args
+                    fastcgi: '127.0.0.1:9000'
+                    fastcgi_index: index.php
+                    fastcgi_split_path: '^(.+\.php)(/.*)$'
+                    fast_cgi_params_extra:
+                        - 'SCRIPT_FILENAME $request_filename'
+                        - 'APP_ENV dev'
             ssl_cert: ''
             ssl_key: ''
-            ssl_port: ''
+            ssl_port: '443'
 php:
     install: '1'
     settings:

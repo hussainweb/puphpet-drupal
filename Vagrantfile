@@ -250,7 +250,7 @@ Vagrant.configure('2') do |config|
   if File.file?(customKey)
     config.ssh.private_key_path = [
       customKey,
-      "#{vagrant_home}/insecure_private_key"
+      "#{dir}/puphpet/files/dot/ssh/insecure_private_key"
     ]
 
     if File.file?(vagrantKey) and ! FileUtils.compare_file(customKey, vagrantKey)

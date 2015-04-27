@@ -12,14 +12,17 @@ if array_true($apache_values, 'install') {
   class { 'puphpet::apache::repo': }
 
   $apache_version = '2.4'
-  $apache_modules = delete($apache_values['modules'], 'pagespeed')
+  $apache_modules = delete($apache_values['modules'], ['pagespeed', 'ssl'])
 
   if array_true($php_values, 'install') {
     $php_engine    = true
-    $php_fcgi_port = access($php_values, 'fpm_settings.port')
+    $php_fcgi_port = '9000'
   } elsif array_true($hhvm_values, 'install') {
     $php_engine    = true
-    $php_fcgi_port = access($hhvm_values, 'settings.port')
+    $php_fcgi_port = array_true($hhvm_values['server_ini'], 'hhvm.server.port') ? {
+      true    => $hhvm_values['server_ini']['hhvm.server.port'],
+      default => '9000'
+    }
   } else {
     $php_engine    = false
   }
@@ -154,7 +157,7 @@ if array_true($apache_values, 'install') {
       $files_match        = template('puphpet/apache/files_match.erb')
       $directories_merged = merge($vhost['directories'], hash_eval($files_match))
     } else {
-      $directories_merged = {}
+      $directories_merged = []
     }
 
     $vhost_custom_fragment = array_true($vhost, 'custom_fragment') ? {

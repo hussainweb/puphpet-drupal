@@ -1,5 +1,5 @@
----
-vagrantfile-local:
+vagrantfile:
+    target: local
     vm:
         box: puphpet/ubuntu1404-x64
         box_url: puphpet/ubuntu1404-x64
@@ -30,8 +30,6 @@ vagrantfile-local:
                     - '--parser future'
         synced_folder:
             varwww:
-                owner: ''
-                group: ''
                 source: ./
                 target: /var/www
                 sync_type: default
@@ -42,7 +40,10 @@ vagrantfile-local:
                         - '-z'
                     exclude:
                         - .vagrant/
-                    auto: 'false'
+                        - .git/
+                    auto: 'true'
+                owner: www-data
+                group: www-data
         usable_port_range:
             start: 10200
             stop: 10500
@@ -64,7 +65,6 @@ server:
         - htop
         - git
         - unzip
-        - php5-memcache
         - vim
         - curl
         - zsh
@@ -72,9 +72,6 @@ users_groups:
     install: '1'
     groups: {  }
     users: {  }
-cron:
-    install: '1'
-    jobs: {  }
 firewall:
     install: '1'
     rules:
@@ -90,6 +87,59 @@ firewall:
             priority: '100'
             proto: tcp
             action: accept
+cron:
+    install: '1'
+    jobs: {  }
+nginx:
+    install: '0'
+    settings:
+        default_vhost: 1
+        proxy_buffer_size: 128k
+        proxy_buffers: '4 256k'
+    upstreams: {  }
+    vhosts:
+        nxv_z5baqaqyg8p5:
+            server_name: awesome.dev
+            server_aliases:
+                - www.awesome.dev
+            www_root: /var/www/awesome
+            listen_port: '80'
+            index_files:
+                - index.html
+                - index.htm
+                - index.php
+            client_max_body_size: 1m
+            ssl: '0'
+            ssl_cert: ''
+            ssl_key: ''
+            ssl_port: '443'
+            rewrite_to_https: '1'
+            spdy: '1'
+            locations:
+                nxvl_0ulsdzsh1jqy:
+                    location: /
+                    autoindex: off
+                    try_files:
+                        - $uri
+                        - $uri/
+                        - /index.php$is_args$args
+                    fastcgi: ''
+                    fastcgi_index: ''
+                    fastcgi_split_path: ''
+                nxvl_083w8bsa6sxr:
+                    location: '~ \.php$'
+                    autoindex: off
+                    try_files:
+                        - $uri
+                        - $uri/
+                        - /index.php$is_args$args
+                    fastcgi: '127.0.0.1:9000'
+                    fastcgi_index: index.php
+                    fastcgi_split_path: '^(.+\.php)(/.*)$'
+                    fast_cgi_params_extra:
+                        - 'SCRIPT_FILENAME $request_filename'
+                        - 'APP_ENV dev'
+    proxies: {  }
 apache:
     install: '1'
     settings:
@@ -108,14 +158,19 @@ apache:
     vhosts:
         drupaldev:
             servername: drupal.dev
+            serveraliases:
+                - www.drupal.dev
             docroot: /var/www/drupal/docroot
             port: '80'
             setenv:
                 - 'APP_ENV dev'
             custom_fragment: ''
+            ssl_cert: ''
+            ssl_key: ''
+            ssl_chain: ''
+            ssl_certs_dir: ''
             directories:
                 docroot:
-                    provider: directory
                     path: /var/www/drupal/docroot
                     options:
                         - Indexes
@@ -128,68 +183,15 @@ apache:
                     custom_fragment: ''
                     files_match:
                         phpmatch:
-                            provider: filesmatch
                             path: \.php$
                             sethandler: 'proxy:fcgi://127.0.0.1:9000'
                             custom_fragment: ''
-            ssl_cert: ''
-            ssl_key: ''
-            ssl_chain: ''
-            ssl_certs_dir: ''
-nginx:
-    install: '0'
-    settings:
-        default_vhost: 1
-        proxy_buffer_size: 128k
-        proxy_buffers: '4 256k'
-    upstreams: {  }
-    vhosts:
-        IWmjxjm1NfXC:
-            proxy: ''
-            server_name: awesome.dev
-            server_aliases:
-                - www.awesome.dev
-            www_root: /var/www/awesome
-            listen_port: '80'
-            index_files:
-                - index.html
-                - index.htm
-                - index.php
-            client_max_body_size: 1m
-            locations:
-                zdlmomnne2ni:
-                    location: /
-                    try_files:
-                        - $uri
-                        - $uri/
-                        - index.php
-                    fastcgi: ''
-                    fastcgi_index: ''
-                    fastcgi_split_path: ''
-                5vul8hyjsa0m:
-                    location: '~ \.php$'
-                    try_files:
-                        - $uri
-                        - $uri/
-                        - index.php
-                        - /index.php$is_args$args
-                    fastcgi: '127.0.0.1:9000'
-                    fastcgi_index: index.php
-                    fastcgi_split_path: '^(.+\.php)(/.*)$'
-                    fast_cgi_params_extra:
-                        - 'SCRIPT_FILENAME $request_filename'
-                        - 'APP_ENV dev'
-            ssl_cert: ''
-            ssl_key: ''
-            ssl_port: '443'
+                            provider: filesmatch
+                    provider: directory
 php:
     install: '1'
     settings:
         version: '56'
-    fpm_settings:
-        port: 9000
-    composer: '1'
-    composer_home: ''
     modules:
         php:
             - apcu
@@ -206,8 +208,7 @@ php:
             - mysqlnd
             - sqlite
             - sybase
-        pear:
-            - PHP_CodeSniffer
+        pear: {  }
         pecl:
             - pecl_http
     ini:
@@ -226,18 +227,18 @@ php:
         opcache.max_accelerated_files: '4000'
         opcache.memory_consumption: '128'
         opcache.revalidate_freq: '60'
-hhvm:
-    install: '0'
-    nightly: 0
+    fpm_ini:
+        error_log: /var/log/php-fpm.log
+    fpm_pools:
+        phpfp_eftsv5upyct8:
+            ini:
+                prefix: www
+                listen: '127.0.0.1:9000'
+                security.limit_extensions: .php
+                user: www-user
+                group: www-data
     composer: '1'
     composer_home: ''
-    settings:
-        host: 127.0.0.1
-        port: '9000'
-    ini:
-        display_errors: On
-        error_reporting: '-1'
-    timezone: null
 xdebug:
     install: '1'
     settings:
@@ -251,40 +252,47 @@ xhprof:
     install: '1'
 wpcli:
     install: '0'
-    version: ''
+    version: v0.19.0
 drush:
     install: '1'
     version: 7.0.0-rc1
 ruby:
     install: '1'
-    versions:
-        OTFYHVjI6Klb:
-            version: ''
-            bundler: '1'
+    versions: {  }
+python:
+    install: '1'
+    packages: {  }
+    versions: {  }
 nodejs:
     install: '1'
     npm_packages:
         - grunt
         - bower
         - gulp
-python:
-    install: '1'
-    packages: {  }
-    versions:
-        adtG0eUBmhfs:
-            version: ''
+hhvm:
+    install: '0'
+    nightly: 0
+    composer: '1'
+    composer_home: ''
+    settings: {  }
+    server_ini:
+        hhvm.server.host: 127.0.0.1
+        hhvm.server.port: '9000'
+        hhvm.log.use_log_file: '1'
+        hhvm.log.file: /var/log/hhvm/error.log
+    php_ini:
+        display_errors: On
+        error_reporting: '-1'
+        date.timezone: UTC
 mysql:
     install: '1'
     settings:
         version: '5.6'
-        root_password: 'vagrant'
+        root_password: vagrant
         override_options: {  }
     adminer: '1'
     users: {  }
-    databases:
-        drupaldb:
-            name: drupal
-            sql: ''
+    databases: {  }
     grants: {  }
 postgresql:
     install: '0'
@@ -293,15 +301,11 @@ postgresql:
             encoding: UTF8
             version: '9.3'
         server:
-            postgres_password: ''
+            postgres_password: '123'
     databases: {  }
     users: {  }
     grants: {  }
     adminer: 0
-sqlite:
-    install: '1'
-    adminer: 0
-    databases: {  }
 mongodb:
     install: '0'
     settings:
@@ -313,6 +317,10 @@ redis:
     install: '1'
     settings:
         conf_port: '6379'
+sqlite:
+    install: '1'
+    adminer: 0
+    databases: {  }
 mailcatcher:
     install: '1'
     settings:
@@ -344,7 +352,7 @@ rabbitmq:
 elastic_search:
     install: '0'
     settings:
-        version: null
+        version: 1.4.1
         java_install: true
 solr:
     install: '1'

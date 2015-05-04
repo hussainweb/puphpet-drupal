@@ -9,6 +9,9 @@ mod 'puppetlabs/apt',
 mod 'puphpet/beanstalkd',
     :git => 'https://github.com/puphpet/puppet-beanstalkd.git',
     :ref => '5a530ff'
+mod 's12v/blackfire',
+    :git => 'https://github.com/s12v/puppet-blackfire.git',
+    :ref => 'e43bab6'
 mod 'tPl0ch/composer',
     :git => 'https://github.com/puphpet/puppet-composer.git',
     :ref => 'c4f9478'
@@ -24,6 +27,9 @@ mod 'garethr/erlang',
 mod 'puppetlabs/firewall',
     :git => 'https://github.com/puppetlabs/puppetlabs-firewall.git',
     :ref => '1.1.1'
+mod 'puppetlabs/inifile',
+    :git => 'https://github.com/puppetlabs/puppetlabs-inifile.git',
+    :ref => '1.2.0'
 mod 'puppetlabs/java',
     :git => 'https://github.com/puppetlabs/puppetlabs-java.git',
     :ref => '1.3.0'
@@ -53,7 +59,7 @@ mod 'puppetlabs/postgresql',
     :ref => '4.2.0'
 mod 'puphpet/puphpet',
     :git => 'https://github.com/puphpet/puppet-puphpet.git',
-    :ref => 'd9fefd0'
+    :ref => '50c390b'
 mod 'example42/puppi',
     :git => 'https://github.com/example42/puppi.git',
     :ref => 'v2.1.9'

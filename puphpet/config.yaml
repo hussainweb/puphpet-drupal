@@ -150,11 +150,11 @@ apache:
         manage_group: false
         sendfile: 0
     modules:
+        - expires
+        - info
+        - pagespeed
         - proxy_fcgi
         - rewrite
-        - pagespeed
-        - info
-        - expires
     vhosts:
         drupaldev:
             servername: drupal.dev
@@ -212,7 +212,7 @@ php:
         pecl:
             - pecl_http
     ini:
-        date.timezone: 'Asia/Kolkata'
+        date.timezone: Asia/Kolkata
         display_errors: On
         display_startup_errors: On
         error_reporting: '-1'
@@ -248,6 +248,20 @@ xdebug:
         xdebug.remote_enable: '1'
         xdebug.remote_handler: dbgp
         xdebug.remote_port: '9000'
+blackfire:
+    install: '0'
+    settings:
+        server_id: ''
+        server_token: ''
+        agent:
+            http_proxy: ''
+            https_proxy: ''
+            log_file: stderr
+            log_level: '1'
+        php:
+            agent_timeout: '0.25'
+            log_file: ''
+            log_level: '1'
 xhprof:
     install: '1'
 wpcli:

@@ -10,8 +10,8 @@ mod 'puphpet/beanstalkd',
     :git => 'https://github.com/puphpet/puppet-beanstalkd.git',
     :ref => '5a530ff'
 mod 's12v/blackfire',
-    :git => 'https://github.com/s12v/puppet-blackfire.git',
-    :ref => 'e43bab6'
+    :git => 'https://github.com/puphpet/puppet-blackfire.git',
+    :ref => 'cb938a5'
 mod 'tPl0ch/composer',
     :git => 'https://github.com/puphpet/puppet-composer.git',
     :ref => 'c4f9478'
@@ -59,7 +59,7 @@ mod 'puppetlabs/postgresql',
     :ref => '4.2.0'
 mod 'puphpet/puphpet',
     :git => 'https://github.com/puphpet/puppet-puphpet.git',
-    :ref => '50c390b'
+    :ref => 'a1f5dbb'
 mod 'example42/puppi',
     :git => 'https://github.com/example42/puppi.git',
     :ref => 'v2.1.9'
@@ -68,13 +68,10 @@ mod 'daenney/pyenv',
     :ref => '062ae72'
 mod 'puppetlabs/rabbitmq',
     :git => 'https://github.com/puppetlabs/puppetlabs-rabbitmq.git',
-    :ref => '5ce33f4968'
+    :ref => '5.2.0'
 mod 'puphpet/redis',
     :git => 'https://github.com/puphpet/puppet-redis.git',
     :ref => 'd9b3b23b0c'
-mod 'puppet/resolvconf',
-    :git => 'https://github.com/thias/puppet-resolvconf.git',
-    :ref => '5bf752b84b'
 mod 'maestrodev/rvm'
 mod 'example42/solr',
     :git => 'https://github.com/example42/puppet-solr.git',

@@ -15,6 +15,7 @@ vagrantfile:
             virtualbox:
                 modifyvm:
                     natdnshostresolver1: on
+                showgui: ''
             vmware:
                 numvcpus: 1
             parallels:
@@ -33,6 +34,10 @@ vagrantfile:
                 source: ./
                 target: /var/www
                 sync_type: default
+                smb:
+                    smb_host: ''
+                    smb_username: ''
+                    smb_password: ''
                 rsync:
                     args:
                         - '--verbose'
@@ -113,6 +118,8 @@ nginx:
             ssl_cert: ''
             ssl_key: ''
             ssl_port: '443'
+            ssl_protocols: ''
+            ssl_ciphers: ''
             rewrite_to_https: '1'
             spdy: '1'
             locations:
@@ -165,10 +172,13 @@ apache:
             setenv:
                 - 'APP_ENV dev'
             custom_fragment: ''
+            ssl: '0'
             ssl_cert: ''
             ssl_key: ''
             ssl_chain: ''
             ssl_certs_dir: ''
+            ssl_protocol: ''
+            ssl_cipher: ''
             directories:
                 docroot:
                     path: /var/www/drupal/docroot
@@ -249,7 +259,7 @@ xdebug:
         xdebug.remote_handler: dbgp
         xdebug.remote_port: '9000'
 blackfire:
-    install: '0'
+    install: '1'
     settings:
         server_id: ''
         server_token: ''

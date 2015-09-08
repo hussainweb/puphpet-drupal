@@ -9,3 +9,6 @@ fi
 if [ -f ~/.profile ]; then
     . ~/.profile
 fi
+
+PATH=$PATH:$HOME/bin
+export PATH

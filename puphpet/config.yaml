@@ -1,34 +1,39 @@
 vagrantfile:
     target: local
     vm:
-        box: puphpet/ubuntu1404-x64
-        box_url: puphpet/ubuntu1404-x64
-        hostname: drpsrv
-        memory: '1024'
-        cpus: '2'
-        chosen_provider: virtualbox
-        network:
-            private_network: 192.168.56.101
-            forwarded_port: {  }
-        post_up_message: ''
         provider:
-            virtualbox:
-                modifyvm:
-                    natdnshostresolver1: 'on'
-                showgui: ''
-            vmware:
-                numvcpus: 1
-            parallels:
-                cpus: 1
+            local:
+                box: puphpet/ubuntu1404-x64
+                box_url: puphpet/ubuntu1404-x64
+                box_version: 'false'
+                chosen_virtualizer: virtualbox
+                virtualizers:
+                    virtualbox:
+                        modifyvm:
+                            natdnshostresolver1: false
+                        showgui: 0
+                    vmware:
+                        numvcpus: 1
+                    parallels:
+                        use_linked_clone: 0
+                        check_guest_tools: 0
+                        update_guest_tools: 0
+                machines:
+                    mainserver:
+                        id: main
+                        network:
+                            private_network: 192.168.56.101
+                            forwarded_port: {  }
+                        hostname: drpsrv
+                        memory: '1024'
+                        cpus: '2'
         provision:
             puppet:
-                manifests_path: puphpet/puppet
-                manifest_file: site.pp
+                manifests_path: puphpet/puppet/manifests
                 module_path: puphpet/puppet/modules
                 options:
                     - '--verbose'
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
-                    - '--parser future'
         synced_folder:
             varwww:
                 source: ./
@@ -38,6 +43,9 @@ vagrantfile:
                     smb_host: ''
                     smb_username: ''
                     smb_password: ''
+                    mount_options:
+                        dir_mode: '0775'
+                        file_mode: '0664'
                 rsync:
                     args:
                         - '--verbose'
@@ -52,19 +60,26 @@ vagrantfile:
         usable_port_range:
             start: 10200
             stop: 10500
+        post_up_message: ''
     ssh:
-        host: null
-        port: null
-        private_key_path: null
+        host: 'false'
+        port: 'false'
+        private_key_path: 'false'
         username: hw
-        guest_port: null
-        keep_alive: true
-        forward_agent: false
-        forward_x11: false
+        guest_port: 'false'
+        keep_alive: '1'
+        forward_agent: 'false'
+        forward_x11: 'false'
         shell: 'bash -l'
-        insert_key: false
+        insert_key: 'false'
     vagrant:
         host: detect
+    proxy:
+        http: ''
+        https: ''
+        ftp: ''
+        no_proxy: ''
+        enabled: ''
 server:
     install: '1'
     packages:
@@ -85,6 +100,7 @@ locale:
         locales:
             - en_GB.UTF-8
             - en_US.UTF-8
+        timezone: Asia/Kolkata
 firewall:
     install: '1'
     rules:
@@ -146,6 +162,8 @@ nginx:
                     fastcgi: ''
                     fastcgi_index: ''
                     fastcgi_split_path: ''
+                    proxy: ''
+                    proxy_redirect: ''
                 nxvl_083w8bsa6sxr:
                     location: '~ \.php$'
                     autoindex: 'off'
@@ -160,10 +178,13 @@ nginx:
                     fast_cgi_params_extra:
                         - 'SCRIPT_FILENAME $request_filename'
                         - 'APP_ENV dev'
+                    proxy: ''
+                    proxy_redirect: ''
     proxies: {  }
 apache:
     install: '1'
     settings:
+        version: 2.4
         user: www-data
         group: www-data
         default_vhost: true
@@ -324,7 +345,7 @@ wpcli:
     version: v0.19.0
 drush:
     install: '1'
-    version: 8.0.1
+    version: 8.0.5
 ruby:
     install: '1'
     versions: {  }
@@ -334,6 +355,8 @@ python:
     versions: {  }
 nodejs:
     install: '1'
+    settings:
+        version: '5'
     npm_packages:
         - grunt
         - bower
@@ -353,10 +376,10 @@ hhvm:
         display_errors: 'On'
         error_reporting: '-1'
         date.timezone: UTC
-mysql:
+mariadb:
     install: '1'
     settings:
-        version: '5.6'
+        version: '10.1'
         root_password: vagrant
         override_options: {  }
     adminer: '1'
@@ -371,24 +394,21 @@ mysql:
             table: '*.*'
             privileges:
                 - ALL
-mariadb:
+mysql:
     install: '0'
     settings:
-        version: '10.0'
-        root_password: '123'
+        version: '5.6'
+        root_password: vagrant
         override_options: {  }
-    adminer: 0
+    adminer: '1'
     users:
-        mariadbnu_9znkb2pqs5pe:
-            name: dbuser
-            password: '123'
-    databases:
-        mariadbnd_3uuq1wjv8pme:
-            name: dbname
-            sql: ''
+        mysqlnu_s8l0zgq9upcp:
+            name: drupal
+            password: vagrant
+    databases: {  }
     grants:
-        mariadbng_x8lednaomqpu:
-            user: dbuser
+        mysqlng_c8xxt1vw22al:
+            user: drupal
             table: '*.*'
             privileges:
                 - ALL
@@ -407,27 +427,27 @@ postgresql:
 mongodb:
     install: '0'
     settings:
-        auth: 1
         bind_ip: 127.0.0.1
         port: '27017'
+    globals:
+        version: 2.6.0
     databases: {  }
 redis:
     install: '1'
     settings:
-        conf_port: '6379'
+        port: '6379'
 sqlite:
     install: '1'
     adminer: 0
     databases: {  }
-mailcatcher:
+mailhog:
     install: '1'
     settings:
         smtp_ip: 0.0.0.0
         smtp_port: 1025
         http_ip: 0.0.0.0
-        http_port: '1080'
-        mailcatcher_path: /usr/local/rvm/wrappers/default
-        from_email_method: inline
+        http_port: '8025'
+        path: /usr/local/bin/mailhog
 beanstalkd:
     install: '0'
     settings:
@@ -451,6 +471,7 @@ elastic_search:
     settings:
         version: 1.4.1
         java_install: true
+    instances: {  }
 solr:
     install: '1'
     settings:
